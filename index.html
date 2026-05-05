@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FabricBridge — India's Fabric Sourcing Partner</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0f0d0a;
+  --ink2:#1e1b17;
+  --ink3:#2e2a24;
+  --gold:#c49a3c;
+  --gold2:#e8c97a;
+  --cream:#f5f0e8;
+  --cream2:#ede7da;
+  --muted:#8a8070;
+  --white:#ffffff;
+  --border:rgba(255,255,255,0.08);
+  --border2:rgba(255,255,255,0.15);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--ink);
+  color:var(--cream);
+  font-size:15px;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+
+/* ── NOISE TEXTURE OVERLAY ── */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:0;
+  opacity:0.4;
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:20px 48px;
+  display:flex;justify-content:space-between;align-items:center;
+  background:rgba(15,13,10,0.85);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{
+  display:flex;align-items:center;gap:10px;
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;font-weight:600;
+  color:var(--cream);text-decoration:none;letter-spacing:0.02em;
+}
+.nav-logo span{color:var(--gold)}
+.nav-links{display:flex;gap:32px;align-items:center}
+.nav-links a{
+  font-size:13px;color:rgba(245,240,232,0.55);
+  text-decoration:none;letter-spacing:0.04em;
+  transition:color 0.2s;
+}
+.nav-links a:hover{color:var(--cream)}
+.nav-cta{
+  background:var(--gold);color:var(--ink)!important;
+  padding:8px 20px;border-radius:2px;font-weight:500;
+  font-size:13px!important;letter-spacing:0.04em;
+  transition:background 0.2s!important;
+}
+.nav-cta:hover{background:var(--gold2)!important}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  justify-content:center;
+  padding:120px 48px 80px;
+  position:relative;overflow:hidden;
+}
+
+/* Woven grid background */
+.hero::after{
+  content:'';position:absolute;inset:0;
+  background-image:
+    repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(196,154,60,0.04) 39px,rgba(196,154,60,0.04) 40px),
+    repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(196,154,60,0.04) 39px,rgba(196,154,60,0.04) 40px);
+  pointer-events:none;z-index:0;
+}
+
+.hero-inner{
+  max-width:1100px;margin:0 auto;width:100%;
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;
+  position:relative;z-index:1;
+}
+
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:11px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:24px;
+  opacity:0;animation:fadeUp 0.8s 0.2s forwards;
+}
+.hero-eyebrow::before{content:'';width:24px;height:1px;background:var(--gold)}
+
+.hero-headline{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(48px,5.5vw,76px);
+  font-weight:500;line-height:1.05;
+  color:var(--cream);margin-bottom:24px;
+  opacity:0;animation:fadeUp 0.8s 0.35s forwards;
+}
+.hero-headline em{font-style:italic;color:var(--gold2)}
+
+.hero-body{
+  font-size:15px;font-weight:300;
+  color:rgba(245,240,232,0.6);
+  line-height:1.8;max-width:420px;margin-bottom:40px;
+  opacity:0;animation:fadeUp 0.8s 0.5s forwards;
+}
+
+.hero-actions{
+  display:flex;gap:16px;align-items:center;flex-wrap:wrap;
+  opacity:0;animation:fadeUp 0.8s 0.65s forwards;
+}
+
+.btn-primary{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--gold);color:var(--ink);
+  padding:14px 28px;border-radius:2px;
+  font-weight:500;font-size:14px;text-decoration:none;
+  letter-spacing:0.04em;transition:all 0.2s;
+}
+.btn-primary:hover{background:var(--gold2);transform:translateY(-1px)}
+.btn-primary svg{flex-shrink:0}
+
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:8px;
+  color:rgba(245,240,232,0.6);font-size:13px;
+  text-decoration:none;letter-spacing:0.06em;
+  border-bottom:1px solid rgba(245,240,232,0.2);
+  padding-bottom:2px;transition:all 0.2s;
+}
+.btn-ghost:hover{color:var(--cream);border-color:var(--cream)}
+
+/* Hero visual - woven card */
+.hero-visual{
+  opacity:0;animation:fadeIn 1s 0.6s forwards;
+}
+
+.weave-card{
+  background:var(--ink2);
+  border:1px solid var(--border2);
+  border-radius:4px;padding:36px;
+  position:relative;overflow:hidden;
+}
+.weave-card::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    45deg,
+    transparent,transparent 8px,
+    rgba(196,154,60,0.03) 8px,rgba(196,154,60,0.03) 9px
+  );
+}
+
+.weave-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(196,154,60,0.12);border:1px solid rgba(196,154,60,0.25);
+  color:var(--gold2);font-size:11px;letter-spacing:0.1em;
+  text-transform:uppercase;padding:5px 12px;border-radius:2px;
+  margin-bottom:24px;position:relative;
+}
+.weave-badge::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:var(--gold);animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
+
+.weave-stat-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:1px;
+  background:var(--border);border:1px solid var(--border);
+  border-radius:3px;overflow:hidden;margin-bottom:24px;
+  position:relative;
+}
+.weave-stat{
+  background:var(--ink2);padding:20px;
+}
+.weave-stat-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:30px;font-weight:600;color:var(--gold2);
+  line-height:1;margin-bottom:4px;
+}
+.weave-stat-label{
+  font-size:11px;color:rgba(245,240,232,0.35);
+  letter-spacing:0.08em;text-transform:uppercase;
+}
+
+.fabric-types{
+  display:flex;flex-wrap:wrap;gap:6px;
+  position:relative;
+}
+.fabric-chip{
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border2);
+  color:rgba(245,240,232,0.5);
+  font-size:11px;padding:4px 12px;border-radius:2px;
+  letter-spacing:0.05em;
+}
+
+/* ── SECTION BASE ── */
+section{padding:100px 48px;position:relative;z-index:1}
+.section-inner{max-width:1100px;margin:0 auto}
+.section-label{
+  font-size:11px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:16px;
+  display:flex;align-items:center;gap:10px;
+}
+.section-label::before{content:'';width:20px;height:1px;background:var(--gold)}
+.section-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(34px,3.5vw,50px);font-weight:500;
+  color:var(--cream);line-height:1.1;margin-bottom:20px;
+}
+.section-title em{font-style:italic;color:var(--gold2)}
+.section-body{
+  font-size:15px;font-weight:300;
+  color:rgba(245,240,232,0.55);line-height:1.85;
+  max-width:560px;
+}
+
+/* ── SERVICES ── */
+.services{background:var(--ink2)}
+.services-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--border);
+  border:1px solid var(--border);border-radius:4px;
+  overflow:hidden;margin-top:56px;
+}
+.service-card{
+  background:var(--ink2);padding:40px 32px;
+  transition:background 0.3s;
+}
+.service-card:hover{background:var(--ink3)}
+.service-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:48px;font-weight:400;
+  color:rgba(196,154,60,0.15);line-height:1;
+  margin-bottom:20px;
+}
+.service-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;font-weight:600;
+  color:var(--cream);margin-bottom:10px;
+}
+.service-desc{
+  font-size:13.5px;color:rgba(245,240,232,0.45);
+  line-height:1.75;
+}
+.service-tag{
+  display:inline-block;
+  margin-top:16px;
+  font-size:10px;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--gold);border-bottom:1px solid rgba(196,154,60,0.3);
+  padding-bottom:2px;
+}
+
+/* ── HOW IT WORKS ── */
+.steps-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:0;margin-top:56px;position:relative;
+}
+.steps-grid::before{
+  content:'';position:absolute;
+  top:28px;left:calc(12.5% + 16px);right:calc(12.5% + 16px);
+  height:1px;background:linear-gradient(to right,var(--gold),rgba(196,154,60,0.1));
+  z-index:0;
+}
+.step-item{position:relative;z-index:1;padding:0 20px;text-align:center}
+.step-circle{
+  width:56px;height:56px;border-radius:50%;
+  background:var(--ink2);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 20px;
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;font-weight:600;color:var(--gold);
+  position:relative;
+}
+.step-circle::after{
+  content:'';position:absolute;inset:-4px;border-radius:50%;
+  border:1px solid rgba(196,154,60,0.15);
+}
+.step-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:18px;font-weight:600;color:var(--cream);
+  margin-bottom:8px;
+}
+.step-desc{font-size:12.5px;color:rgba(245,240,232,0.4);line-height:1.7}
+
+/* ── APP COMING SOON ── */
+.app-section{
+  background:var(--cream);
+  color:var(--ink);
+  overflow:hidden;
+}
+.app-section .section-label{color:var(--gold)}
+.app-section .section-label::before{background:var(--gold)}
+.app-section .section-title{color:var(--ink)}
+.app-section .section-body{color:rgba(30,27,23,0.6)}
+
+.app-inner{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:80px;align-items:center;
+  max-width:1100px;margin:0 auto;
+}
+
+.app-features{margin-top:32px;display:flex;flex-direction:column;gap:20px}
+.app-feature{
+  display:flex;gap:16px;align-items:flex-start;
+  padding:20px;
+  background:var(--cream2);
+  border:1px solid rgba(30,27,23,0.08);
+  border-radius:3px;
+}
+.app-feature-icon{
+  width:36px;height:36px;flex-shrink:0;
+  background:var(--ink);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  margin-top:1px;
+}
+.app-feature-name{
+  font-weight:500;font-size:14px;color:var(--ink);margin-bottom:3px;
+}
+.app-feature-desc{font-size:12.5px;color:rgba(30,27,23,0.5);line-height:1.6}
+
+.app-notify{
+  margin-top:36px;
+  background:var(--ink);border-radius:3px;padding:24px;
+}
+.app-notify-label{
+  font-size:11px;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:12px;
+}
+.app-notify-form{display:flex;gap:8px}
+.app-notify-input{
+  flex:1;background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:2px;padding:11px 16px;
+  color:var(--cream);font-size:13px;font-family:'DM Sans',sans-serif;
+  outline:none;transition:border 0.2s;
+}
+.app-notify-input::placeholder{color:rgba(245,240,232,0.3)}
+.app-notify-input:focus{border-color:rgba(196,154,60,0.5)}
+.app-notify-btn{
+  background:var(--gold);color:var(--ink);
+  border:none;padding:11px 20px;border-radius:2px;
+  font-size:13px;font-weight:500;cursor:pointer;
+  font-family:'DM Sans',sans-serif;white-space:nowrap;
+  transition:background 0.2s;
+}
+.app-notify-btn:hover{background:var(--gold2)}
+
+/* Phone mockup */
+.phone-wrap{
+  display:flex;justify-content:center;
+  position:relative;
+}
+.phone-frame{
+  width:240px;
+  background:var(--ink);
+  border-radius:36px;
+  border:2px solid rgba(255,255,255,0.1);
+  padding:16px 12px;
+  position:relative;
+  box-shadow:0 40px 80px rgba(0,0,0,0.3);
+}
+.phone-notch{
+  width:60px;height:6px;background:rgba(255,255,255,0.1);
+  border-radius:3px;margin:0 auto 16px;
+}
+
+/* App UI inside phone */
+.phone-ui{background:#0f0d0a;border-radius:24px;overflow:hidden;font-size:9px}
+.phone-header{
+  background:#1e1b17;padding:10px 12px;
+  display:flex;justify-content:space-between;align-items:center;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.phone-logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:11px;font-weight:600;color:#e8c97a;
+}
+.phone-avatar{
+  width:20px;height:20px;border-radius:50%;
+  background:linear-gradient(135deg,#c49a3c,#8a6820);
+}
+.phone-search{
+  margin:10px 12px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:6px;padding:7px 10px;
+  color:rgba(245,240,232,0.3);font-size:8.5px;
+  display:flex;align-items:center;gap:5px;
+}
+.phone-cats{
+  display:flex;gap:5px;padding:6px 12px;overflow:hidden;
+}
+.phone-cat{
+  background:rgba(196,154,60,0.12);border:1px solid rgba(196,154,60,0.2);
+  color:#e8c97a;padding:3px 8px;border-radius:10px;font-size:7.5px;
+  white-space:nowrap;
+}
+.phone-cat.active{background:#c49a3c;color:#0f0d0a}
+.phone-cards{padding:0 12px 12px;display:flex;flex-direction:column;gap:7px}
+.phone-card{
+  background:#1e1b17;border:1px solid rgba(255,255,255,0.06);
+  border-radius:8px;padding:10px;
+  display:flex;gap:8px;align-items:flex-start;
+}
+.phone-card-img{
+  width:36px;height:36px;border-radius:5px;flex-shrink:0;
+}
+.phone-card-name{color:rgba(245,240,232,0.85);font-size:8.5px;font-weight:500;margin-bottom:2px}
+.phone-card-sub{color:rgba(245,240,232,0.35);font-size:7.5px}
+.phone-card-price{
+  margin-top:4px;font-size:8px;
+  color:#e8c97a;font-weight:500;
+}
+.phone-rfq{
+  margin:6px 12px 10px;
+  background:linear-gradient(135deg,#c49a3c,#8a6820);
+  border-radius:6px;padding:9px;text-align:center;
+  color:#0f0d0a;font-size:8.5px;font-weight:500;
+}
+.phone-nav{
+  background:#1e1b17;border-top:1px solid rgba(255,255,255,0.06);
+  display:flex;justify-content:space-around;padding:8px 0;
+}
+.phone-nav-dot{width:20px;height:20px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.phone-nav-icon{width:14px;height:2px;background:rgba(255,255,255,0.2);border-radius:1px}
+.phone-nav-icon.active{background:#c49a3c}
+.phone-nav-dot.active .phone-nav-dot-label{color:#c49a3c}
+.phone-nav-dot-label{font-size:6.5px;color:rgba(255,255,255,0.25)}
+
+/* Floating badges on phone */
+.phone-badge{
+  position:absolute;
+  background:var(--ink);border:1px solid var(--border2);
+  border-radius:8px;padding:8px 12px;
+  font-size:10px;color:var(--cream);
+  white-space:nowrap;
+  box-shadow:0 8px 24px rgba(0,0,0,0.4);
+}
+.phone-badge-1{top:40px;right:-70px}
+.phone-badge-2{bottom:80px;left:-80px}
+.badge-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#4caf50;margin-right:5px}
+
+/* Coming soon strip */
+.coming-strip{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(196,154,60,0.08);
+  border:1px solid rgba(196,154,60,0.15);
+  border-radius:2px;padding:10px 16px;
+  font-size:12px;color:rgba(30,27,23,0.6);
+  margin-top:20px;
+}
+.coming-strip strong{color:var(--ink);font-weight:500}
+
+/* ── FABRIC TYPES TICKER ── */
+.ticker{
+  background:var(--gold);padding:14px 0;
+  overflow:hidden;border-top:1px solid rgba(255,255,255,0.1);
+}
+.ticker-inner{
+  display:flex;gap:0;
+  animation:ticker 30s linear infinite;
+  width:max-content;
+}
+.ticker-item{
+  font-size:12px;font-weight:500;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--ink);
+  padding:0 32px;white-space:nowrap;
+}
+.ticker-dot{color:rgba(15,13,10,0.4)}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── CONTACT / CTA ── */
+.cta-section{
+  text-align:center;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 100%,rgba(196,154,60,0.08) 0%,transparent 70%),
+    var(--ink);
+  border-top:1px solid var(--border);
+}
+.cta-section .section-title{font-size:clamp(36px,4vw,60px)}
+.cta-actions{
+  display:flex;gap:16px;justify-content:center;
+  margin-top:36px;flex-wrap:wrap;
+}
+.contact-cards{
+  display:flex;gap:16px;justify-content:center;
+  flex-wrap:wrap;margin-top:48px;
+}
+.contact-card{
+  background:var(--ink2);border:1px solid var(--border2);
+  border-radius:4px;padding:24px 32px;text-align:left;min-width:200px;
+}
+.contact-card-label{
+  font-size:10px;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:6px;
+}
+.contact-card-val{
+  font-size:16px;font-weight:500;color:var(--cream);
+}
+
+/* ── FOOTER ── */
+footer{
+  padding:32px 48px;
+  border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+  position:relative;z-index:1;
+}
+.footer-logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:18px;font-weight:600;color:var(--cream);letter-spacing:0.02em;
+}
+.footer-logo span{color:var(--gold)}
+.footer-copy{font-size:12px;color:rgba(245,240,232,0.25);letter-spacing:0.04em}
+.footer-links{display:flex;gap:24px}
+.footer-links a{
+  font-size:12px;color:rgba(245,240,232,0.35);
+  text-decoration:none;letter-spacing:0.06em;transition:color 0.2s;
+}
+.footer-links a:hover{color:var(--cream)}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* ── SCROLL REVEAL ── */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s,transform 0.7s}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ── MOBILE ── */
+@media(max-width:768px){
+  nav{padding:16px 20px}
+  .nav-links{display:none}
+  .hero{padding:100px 20px 60px}
+  .hero-inner{grid-template-columns:1fr;gap:48px}
+  .hero-visual{display:none}
+  section{padding:72px 20px}
+  .services-grid{grid-template-columns:1fr}
+  .steps-grid{grid-template-columns:1fr 1fr;gap:32px}
+  .steps-grid::before{display:none}
+  .app-inner{grid-template-columns:1fr}
+  .phone-wrap{display:none}
+  .contact-cards{flex-direction:column;align-items:center}
+  footer{flex-direction:column;gap:16px;text-align:center;padding:24px 20px}
+  .footer-links{justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Fabric<span>Bridge</span></a>
+  <div class="nav-links">
+    <a href="#services">Services</a>
+    <a href="#how">How It Works</a>
+    <a href="#app">App</a>
+    <a href="#contact">Contact</a>
+    <a href="https://wa.me/91XXXXXXXXXX" class="nav-cta">WhatsApp Us</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-eyebrow">India's Fabric Sourcing Partner</div>
+      <h1 class="hero-headline">Where Mills<br>Meet <em>Buyers,</em><br>Seamlessly.</h1>
+      <p class="hero-body">FabricBridge connects garment makers, boutiques, and designers directly to verified textile mills — no middlemen, no markups, guaranteed quality and on-time delivery across India.</p>
+      <div class="hero-actions">
+        <a href="https://wa.me/91XXXXXXXXXX" class="btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Get a Free Quote
+        </a>
+        <a href="#how" class="btn-ghost">See how it works →</a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="weave-card">
+        <div class="weave-badge">Live sourcing network</div>
+        <div class="weave-stat-grid">
+          <div class="weave-stat">
+            <div class="weave-stat-num">Direct</div>
+            <div class="weave-stat-label">Mill Pricing</div>
+          </div>
+          <div class="weave-stat">
+            <div class="weave-stat-num">48hr</div>
+            <div class="weave-stat-label">Quote Response</div>
+          </div>
+          <div class="weave-stat">
+            <div class="weave-stat-num">Pan</div>
+            <div class="weave-stat-label">India Delivery</div>
+          </div>
+          <div class="weave-stat">
+            <div class="weave-stat-num">Zero</div>
+            <div class="weave-stat-label">Buyer Fees</div>
+          </div>
+        </div>
+        <div class="fabric-types">
+          <span class="fabric-chip">Cotton</span>
+          <span class="fabric-chip">Polyester</span>
+          <span class="fabric-chip">Linen</span>
+          <span class="fabric-chip">Georgette</span>
+          <span class="fabric-chip">Denim</span>
+          <span class="fabric-chip">Jersey Knit</span>
+          <span class="fabric-chip">Silk Blend</span>
+          <span class="fabric-chip">Chiffon</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item">Cotton <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Polyester <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Linen <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Georgette <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Denim <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Silk Blend <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Chiffon <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Jersey Knit <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Interlock <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Voile <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Twill <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Satin <span class="ticker-dot">◆</span></span>
+    <!-- Duplicate for seamless loop -->
+    <span class="ticker-item">Cotton <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Polyester <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Linen <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Georgette <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Denim <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Silk Blend <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Chiffon <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Jersey Knit <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Interlock <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Voile <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Twill <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Satin <span class="ticker-dot">◆</span></span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">What We Do</div>
+      <div class="section-title">End-to-End Fabric<br><em>Sourcing, Done Right</em></div>
+    </div>
+    <div class="services-grid reveal">
+      <div class="service-card">
+        <div class="service-num">01</div>
+        <div class="service-name">Fabric Sourcing</div>
+        <div class="service-desc">We source any fabric type from our verified mill network — cotton, polyester, silk, linen, blends — at mill-direct prices with no hidden markups.</div>
+        <div class="service-tag">Pan India Mills</div>
+      </div>
+      <div class="service-card">
+        <div class="service-num">02</div>
+        <div class="service-name">RFQ &amp; Quotation</div>
+        <div class="service-desc">Share your requirement — type, quantity, colour, GSM — and we come back with a competitive quote within 48 hours, no obligation.</div>
+        <div class="service-tag">Free Service</div>
+      </div>
+      <div class="service-card">
+        <div class="service-num">03</div>
+        <div class="service-name">Quality Assurance</div>
+        <div class="service-desc">Every order is inspected for colour consistency, GSM, and weave quality before dispatch. If it doesn't match the spec, we replace it.</div>
+        <div class="service-tag">Pre-Dispatch QC</div>
+      </div>
+      <div class="service-card">
+        <div class="service-num">04</div>
+        <div class="service-name">Order Tracking</div>
+        <div class="service-desc">Real-time updates from order placement to doorstep delivery via WhatsApp. Dedicated point of contact for every order.</div>
+        <div class="service-tag">Live Updates</div>
+      </div>
+      <div class="service-card">
+        <div class="service-num">05</div>
+        <div class="service-name">Mill Onboarding</div>
+        <div class="service-desc">Are you a mill or manufacturer? List your fabric catalogue with us and get connected to hundreds of verified buyers — zero cost to list.</div>
+        <div class="service-tag">For Mills</div>
+      </div>
+      <div class="service-card">
+        <div class="service-num">06</div>
+        <div class="service-name">Bulk &amp; Custom Orders</div>
+        <div class="service-desc">From 50 meters to 50,000 meters. Custom GSM, custom width, custom dyeing — we handle large and complex requirements with ease.</div>
+        <div class="service-tag">Any Quantity</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center">
+      <div class="section-label" style="justify-content:center">The Process</div>
+      <div class="section-title" style="max-width:500px;margin:0 auto 8px">Simple. Fast. <em>Reliable.</em></div>
+      <div class="section-body" style="margin:0 auto;text-align:center">From your first WhatsApp to fabric at your door — here's exactly how it works.</div>
+    </div>
+    <div class="steps-grid reveal">
+      <div class="step-item">
+        <div class="step-circle">1</div>
+        <div class="step-name">Share Requirement</div>
+        <div class="step-desc">Tell us fabric type, quantity, colour, and timeline via WhatsApp or call</div>
+      </div>
+      <div class="step-item">
+        <div class="step-circle">2</div>
+        <div class="step-name">We Source &amp; Quote</div>
+        <div class="step-desc">We contact verified mills and send you the best rate within 48 hours</div>
+      </div>
+      <div class="step-item">
+        <div class="step-circle">3</div>
+        <div class="step-name">You Confirm</div>
+        <div class="step-desc">Approve the quote — no hidden charges, clear delivery timeline, written confirmation</div>
+      </div>
+      <div class="step-item">
+        <div class="step-circle">4</div>
+        <div class="step-name">Delivered to Door</div>
+        <div class="step-desc">Post QC inspection, fabric is dispatched with live tracking updates</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APP COMING SOON -->
+<section class="app-section" id="app">
+  <div class="app-inner">
+    <div class="reveal">
+      <div class="section-label">Coming Soon</div>
+      <div class="section-title" style="color:var(--ink)">The FabricBridge<br><em>App is Coming.</em></div>
+      <div class="section-body">We're building a marketplace app where mills and buyers connect directly — browse catalogues, send RFQs, negotiate, and place orders all in one place. No phone calls needed.</div>
+
+      <div class="app-features">
+        <div class="app-feature">
+          <div class="app-feature-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e8c97a" stroke-width="1.5" stroke-linecap="round"><path d="M4 6h16M4 10h16M4 14h10"/></svg>
+          </div>
+          <div>
+            <div class="app-feature-name">Digital Catalogue</div>
+            <div class="app-feature-desc">Mills list their full fabric range with photos, GSM, price, and MOQ. Buyers browse and filter in seconds.</div>
+          </div>
+        </div>
+        <div class="app-feature">
+          <div class="app-feature-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e8c97a" stroke-width="1.5" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          </div>
+          <div>
+            <div class="app-feature-name">In-App RFQ &amp; Chat</div>
+            <div class="app-feature-desc">Post a requirement, get quotes from multiple mills, negotiate — all inside the app with zero WhatsApp chaos.</div>
+          </div>
+        </div>
+        <div class="app-feature">
+          <div class="app-feature-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e8c97a" stroke-width="1.5" stroke-linecap="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+          </div>
+          <div>
+            <div class="app-feature-name">Secure Payments &amp; Orders</div>
+            <div class="app-feature-desc">Place orders, pay via UPI or escrow, track delivery — everything documented and protected.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="app-notify">
+        <div class="app-notify-label">Get notified at launch</div>
+        <div class="app-notify-form">
+          <input class="app-notify-input" type="tel" placeholder="Your WhatsApp number" id="notifyInput"/>
+          <button class="app-notify-btn" onclick="handleNotify()">Notify Me</button>
+        </div>
+      </div>
+
+      <div class="coming-strip">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span><strong>Launching 2025</strong> — Android &amp; iOS. Be the first to know.</span>
+      </div>
+    </div>
+
+    <div class="phone-wrap reveal">
+      <div style="position:relative">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-ui">
+            <div class="phone-header">
+              <div class="phone-logo">FabricBridge</div>
+              <div class="phone-avatar"></div>
+            </div>
+            <div class="phone-search">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              Search fabric...
+            </div>
+            <div class="phone-cats">
+              <span class="phone-cat active">All</span>
+              <span class="phone-cat">Cotton</span>
+              <span class="phone-cat">Poly</span>
+              <span class="phone-cat">Linen</span>
+            </div>
+            <div class="phone-cards">
+              <div class="phone-card">
+                <div class="phone-card-img" style="background:repeating-linear-gradient(45deg,#2a2018,#2a2018 3px,#1a1410 3px,#1a1410 6px)"></div>
+                <div>
+                  <div class="phone-card-name">Premium Cotton Voile</div>
+                  <div class="phone-card-sub">60 GSM · 44" width · Surat Mill</div>
+                  <div class="phone-card-price">₹42/meter · MOQ 50m</div>
+                </div>
+              </div>
+              <div class="phone-card">
+                <div class="phone-card-img" style="background:repeating-linear-gradient(0deg,#1a2a3a,#1a2a3a 4px,#0f1a28 4px,#0f1a28 8px)"></div>
+                <div>
+                  <div class="phone-card-name">Polyester Georgette</div>
+                  <div class="phone-card-sub">70 GSM · 52" width · Bhiwandi</div>
+                  <div class="phone-card-price">₹38/meter · MOQ 100m</div>
+                </div>
+              </div>
+              <div class="phone-card">
+                <div class="phone-card-img" style="background:repeating-linear-gradient(90deg,#2a1a0a,#2a1a0a 5px,#1a0f05 5px,#1a0f05 10px)"></div>
+                <div>
+                  <div class="phone-card-name">Linen Blend 60/40</div>
+                  <div class="phone-card-sub">140 GSM · 58" width · Kolkata</div>
+                  <div class="phone-card-price">₹95/meter · MOQ 30m</div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-rfq">+ Post a Requirement (RFQ)</div>
+            <div class="phone-nav">
+              <div class="phone-nav-dot active">
+                <div class="phone-nav-icon active"></div>
+                <div class="phone-nav-dot-label">Home</div>
+              </div>
+              <div class="phone-nav-dot">
+                <div class="phone-nav-icon"></div>
+                <div class="phone-nav-dot-label">Orders</div>
+              </div>
+              <div class="phone-nav-dot">
+                <div class="phone-nav-icon"></div>
+                <div class="phone-nav-dot-label">Chat</div>
+              </div>
+              <div class="phone-nav-dot">
+                <div class="phone-nav-icon"></div>
+                <div class="phone-nav-dot-label">Profile</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-badge phone-badge-1">
+          <span class="badge-dot"></span>New RFQ received
+        </div>
+        <div class="phone-badge phone-badge-2">
+          ✓ Order dispatched
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="section-inner" style="text-align:center">
+    <div class="reveal">
+      <div class="section-label" style="justify-content:center">Start Today</div>
+      <div class="section-title">Ready to Source<br>Fabric <em>Smarter?</em></div>
+      <div class="section-body" style="margin:0 auto">Tell us what you need on WhatsApp — our team responds with a quote within 48 hours. No fees, no registration, no commitment.</div>
+    </div>
+    <div class="cta-actions reveal">
+      <a href="https://wa.me/91XXXXXXXXXX?text=Hi%20FabricBridge%2C%20I%20need%20fabric%20sourcing%20help" class="btn-primary" style="font-size:15px;padding:16px 36px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WhatsApp Us Now
+      </a>
+    </div>
+    <div class="contact-cards reveal">
+      <div class="contact-card">
+        <div class="contact-card-label">WhatsApp / Call</div>
+        <div class="contact-card-val">+91 XXXXX XXXXX</div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-card-label">Working Hours</div>
+        <div class="contact-card-val">Mon–Sat, 9am–7pm</div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-card-label">Website</div>
+        <div class="contact-card-val">fabricbridge.in</div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-card-label">Instagram</div>
+        <div class="contact-card-val">@fabricbridge</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Fabric<span>Bridge</span></div>
+  <div class="footer-copy">© 2025 FabricBridge. All rights reserved.</div>
+  <div class="footer-links">
+    <a href="#services">Services</a>
+    <a href="#app">App</a>
+    <a href="#contact">Contact</a>
+  </div>
+</footer>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target); }
+  });
+}, {threshold:0.1, rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Notify form
+function handleNotify(){
+  const val = document.getElementById('notifyInput').value.trim();
+  if(val.length >= 10){
+    document.querySelector('.app-notify-form').innerHTML =
+      '<div style="color:#e8c97a;font-size:13px;padding:12px 0;">✓ Done! We\'ll notify you on WhatsApp when the app launches.</div>';
+  } else {
+    document.getElementById('notifyInput').style.borderColor = 'rgba(220,80,80,0.5)';
+    setTimeout(() => document.getElementById('notifyInput').style.borderColor = '', 1500);
+  }
+}
+</script>
+</body>
+</html>
